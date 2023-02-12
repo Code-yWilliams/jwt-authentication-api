@@ -1,7 +1,10 @@
 import passport from "passport";
 import passportLocal from "passport-local";
+import JwtStrategy from "passport-jwt/lib/strategy";
+import { ExtractJwt } from "passport-jwt/lib";
 import UserModel from "../models/user";
 import logger from "../utils/logger";
+import config from "../utils/config";
 const LocalStrategy = passportLocal.Strategy;
 
 // save new user info to db and sends info to next middleware if successful
@@ -41,4 +44,20 @@ async (email, password, done) => {
     return done(e)
   }
 }
+));
+
+passport.use(new JwtStrategy(
+  {
+    secretOrKey: config.SECRET,
+    jwtFromRequest: ExtractJwt.fromUrlQueryParameter('secret_token'),
+
+  },
+  async (token, done) => {
+    try {
+      return done(null, token.user);
+    } catch (e) {
+      logger.error(e);
+      done(e);
+    }
+  }
 ));

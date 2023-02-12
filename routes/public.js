@@ -1,6 +1,6 @@
 import express from 'express';
 import passport from 'passport';
-import { Jwt } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import config from '../utils/config';
 import logger from '../utils/logger';
 
@@ -34,7 +34,7 @@ router.post('/login',
               if (e) return next(e);
 
               const body = { _id: user._id, email: user.email };
-              const token = Jwt.sign({ user: body }, config.SECRET);
+              const token = jwt.sign({ user: body }, config.SECRET);
               return res.json({ token });
             }
           );
@@ -45,6 +45,6 @@ router.post('/login',
       }
     )(req, res, next);
   }
-)
+);
 
 export default router;
