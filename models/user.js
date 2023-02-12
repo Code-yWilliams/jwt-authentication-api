@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import logger from '../utils/logger';
 
 const Schema = mongoose.Schema;
 
