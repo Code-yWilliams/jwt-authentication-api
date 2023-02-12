@@ -8,17 +8,18 @@ import './middleware/authentication.js';
 import config from "./utils/config.js";
 import logger from "./utils/logger.js";
 
-mongoose.connect('mongodb://127.0.0.1:27017/ims', { useNewUrlParser: true, useUnifiedTopology: true });
+// database connection
+mongoose.connect(config.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connection.on('error', error => {
   logger.error(error);
 });
-mongoose.Promise = global.Promise;
 
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use('/', publicRoutes);
+
+// routes that require authentication
 app.use('/user', passport.authenticate('jwt', { session: false }), secureRoutes);
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
