@@ -2,14 +2,16 @@ import express from "express";
 import mongoose from "mongoose";
 import passport from "passport";
 import bodyParser from "body-parser";
-import publicRoutes from './routes/public';
-import secureRoutes from './routes/secure';
-import './middleware/authentication';
-import config from "./utils/config";
-import logger from "./utils/logger";
+import publicRoutes from './routes/public.js';
+import secureRoutes from './routes/secure.js';
+import './middleware/authentication.js';
+import config from "./utils/config.js";
+import logger from "./utils/logger.js";
 
-mongoose.connect('mongodb://127.0.0.1:27017/ims', { useMongoClient: true });
-mongoose.connection.on('error', error => console.error(error));
+mongoose.connect('mongodb://127.0.0.1:27017/ims', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connection.on('error', error => {
+  logger.error(error);
+});
 mongoose.Promise = global.Promise;
 
 const app = express();
