@@ -4,7 +4,7 @@ import logger from '../utils/logger';
 
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+const UserSchema = new Schema({
   email: {
     type: String,
     required: true,
@@ -19,7 +19,7 @@ const userSchema = new Schema({
 
 });
 
-userSchema.pre('save', async (next) => {
+UserSchema.pre('save', async (next) => {
   // 'this' is the current document that is being saved
   try {
     const user = this;
@@ -36,6 +36,6 @@ userSchema.methods.isValidPassword = async (password) => {
   return isValid;
 }
 
-const userModel = mongoose.model('user', userSchema);
+const UserModel = mongoose.model('user', UserSchema);
 
-export default userModel;
+export default UserModel;
