@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 const Schema = mongoose.Schema;
 
@@ -20,10 +20,20 @@ const userSchema = new Schema({
 
 userSchema.pre('save', async (next) => {
   // 'this' is the current document that is being saved
-  const hash = await bcrypt.hash(this.password, 10);
-
-  this.password = hash;
+  try {
+    const user = this;
+    const hash = await bcrypt.hash(user.password, 10);
+    user.password = hash;
+  } catch (e) {
+    logger.error(new Error(`Could not save password for ${this.email}`))
+  }
 });
+
+userSchema.methods.isValidPassword = async (password) => {
+  const user = this;
+  const isValid = await bcrypt.compare(password, user.password);
+  return isValid;
+}
 
 const userModel = mongoose.model('user', userSchema);
 
